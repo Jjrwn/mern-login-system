@@ -12,6 +12,7 @@ A full-stack authentication system with OTP email verification, forgot password,
 - JWT Authentication
 - Nodemailer (SMTP / Gmail)
 - bcryptjs
+  
 **Frontend**
 - React + Vite
 - Tailwind CSS
