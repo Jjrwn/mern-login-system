@@ -7,7 +7,6 @@ import {
   resendOTP,
 } from "../services/authServices.js";
 
-// POST /api/users/register
 export const registerUserController = async (req, res, next) => {
   try {
     let { username, email, password } = req.body;
@@ -27,18 +26,15 @@ export const registerUserController = async (req, res, next) => {
       email.trim().toLowerCase(),
       password,
     );
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully. Check your email for the OTP.",
-        user: result,
-      });
+    res.status(201).json({
+      message: "User registered successfully. Check your email for the OTP.",
+      user: result,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-// POST /api/users/login
 export const loginUserController = async (req, res, next) => {
   try {
     let { email, password } = req.body;
@@ -54,7 +50,6 @@ export const loginUserController = async (req, res, next) => {
   }
 };
 
-// POST /api/users/verify-otp
 export const verifyOtpController = async (req, res, next) => {
   try {
     const { email, code, type } = req.body;
@@ -72,7 +67,6 @@ export const verifyOtpController = async (req, res, next) => {
   }
 };
 
-// POST /api/users/resend-otp
 export const resendOtpController = async (req, res, next) => {
   try {
     const { email, type } = req.body;
@@ -88,7 +82,6 @@ export const resendOtpController = async (req, res, next) => {
   }
 };
 
-// POST /api/users/forgot-password
 export const forgotPasswordController = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -104,7 +97,6 @@ export const forgotPasswordController = async (req, res, next) => {
   }
 };
 
-// POST /api/users/reset-password
 export const resetPasswordController = async (req, res, next) => {
   try {
     const { email, code, newPassword } = req.body;

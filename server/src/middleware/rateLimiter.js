@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit";
 
 export const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 10 * 60 * 1000,
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
@@ -14,8 +14,8 @@ export const loginLimiter = rateLimit({
 });
 
 export const registerLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15,
+  windowMs: 10 * 60 * 1000,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
@@ -28,7 +28,7 @@ export const registerLimiter = rateLimit({
 });
 
 export const passwordResetLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // Fixed: was 15 * 16 * 1000 (4 minutes), now correctly 15 minutes
+  windowMs: 10 * 60 * 1000,
   max: 3,
   standardHeaders: true,
   legacyHeaders: false,
@@ -41,9 +41,8 @@ export const passwordResetLimiter = rateLimit({
   },
 });
 
-// Added: OTP endpoints are the most abuse-prone — dedicated limiter
 export const otpLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 10 * 60 * 1000,
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,

@@ -18,8 +18,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      // NOTE: Don't enforce minlength here — the value stored is a bcrypt hash
-      // (always 60 chars). Enforce length in the controller/service instead.
     },
     isVerified: {
       type: Boolean,

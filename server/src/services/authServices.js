@@ -9,7 +9,6 @@ import logger from "../utils/logger.js";
 // ─── Internal helpers ────────────────────────────────────────────────────────
 
 const generateAndSendOTP = async (email, type) => {
-  // Remove any existing unused OTPs for this email + type
   await OTP.deleteMany({ email, type });
 
   const code = generateOTP(6);
@@ -26,8 +25,6 @@ const generateAndSendOTP = async (email, type) => {
   logger.info(`OTP generated and sent to ${email} for ${type}`);
 };
 
-// ─── Exported service functions ───────────────────────────────────────────────
-
 export const registerUser = async (username, email, password) => {
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
   if (existingUser) {
@@ -39,9 +36,9 @@ export const registerUser = async (username, email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
-    username, // Fixed: was 'name', aligned with User model field
+    username,
     email,
-    password: hashedPassword, // Fixed: was 'hashedPassword' as field name
+    password: hashedPassword,
     isVerified: false,
   });
 
@@ -57,7 +54,6 @@ export const registerUser = async (username, email, password) => {
 export const loginUser = async (email, password) => {
   const user = await User.findOne({ email });
 
-  // Dummy hash prevents timing attacks by always running bcrypt.compare
   const dummyHash = "$2b$10$CwTycUXWue0Thq9StjUM0uJ8z5rG1/2iYF5oPqFhXj3T6a7kS"; // Fixed: was 'dummmyHash' typo
 
   const isMatch = await bcrypt.compare(
@@ -67,7 +63,7 @@ export const loginUser = async (email, password) => {
 
   if (!user || !isMatch) {
     const err = new Error("Invalid email or password");
-    err.status = 401; // Fixed: was err.statusCode, normalized to err.status
+    err.status = 401;
     throw err;
   }
 
@@ -101,7 +97,6 @@ export const verifyOTP = async (email, code, type) => {
   }
 
   if (new Date() > otpRecord.expiresAt) {
-    // Fixed: was otpRecord.expireAt (field name mismatch)
     const err = new Error("OTP has expired. Please request a new one.");
     err.status = 400;
     throw err;
@@ -121,14 +116,12 @@ export const verifyOTP = async (email, code, type) => {
 export const forgotPassword = async (email) => {
   const user = await User.findOne({ email });
 
-  // Fixed: logic was inverted — only send OTP if user EXISTS
   if (user) {
     await generateAndSendOTP(email, "password-reset");
   }
 
   logger.info(`Password reset requested for ${email}`);
 
-  // Always return the same message to prevent email enumeration
   return {
     message:
       "If an account with that email exists, a password reset OTP has been sent.",
@@ -140,8 +133,7 @@ export const resetPassword = async (email, code, newPassword) => {
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-  await User.findOneAndUpdate({ email }, { password: hashedPassword }); // Fixed: field is 'password'
-
+  await User.findOneAndUpdate({ email }, { password: hashedPassword });
   logger.info(`Password reset for ${email}`);
 
   return { message: "Password reset successful" };

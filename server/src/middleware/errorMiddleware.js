@@ -3,7 +3,6 @@ import logger from "../utils/logger.js";
 const errorHandler = (err, req, res, next) => {
   const status = err.status || err.statusCode || 500;
 
-  // Handle Mongoose validation errors specifically
   if (err.name === "ValidationError") {
     return res.status(400).json({
       message: Object.values(err.errors)
@@ -11,8 +10,6 @@ const errorHandler = (err, req, res, next) => {
         .join(", "),
     });
   }
-
-  // Handle Mongoose duplicate key errors
   if (err.code === 11000) {
     return res.status(400).json({
       message: `Duplicate value for: ${Object.keys(err.keyValue).join(", ")}`,
